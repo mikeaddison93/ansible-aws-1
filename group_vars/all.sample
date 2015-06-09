@@ -19,6 +19,13 @@ image: ami-5da23a2a
 region: eu-west-1
 subnet: subnet-4b3a6f0d
 
+# Email sent as notification
+# hint: comment at least mail_to to exclude mail sending
+#
+#mail_to: name1@email
+#mail_from: name2@email
+#mail_host: smtp.email
+
 # Access/Secret keys created from AWS Control Panel
 # (hint: use a new user for this)
 # (hint2: never EVER push this to a repo)

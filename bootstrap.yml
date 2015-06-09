@@ -8,6 +8,8 @@
   gather_facts: False
   roles:
     - create
+  tags:
+    - create
 
 
 #- name: Configure instance(s)
@@ -17,9 +19,13 @@
 #  roles:
 #    - my_awesome_role
 #    - my_awesome_test
+#  tags:
+#    - config
 
 - name: Terminate instances
   hosts: localhost
   connection: local
   roles:
+    - delete
+  tags:
     - delete

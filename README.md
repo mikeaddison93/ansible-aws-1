@@ -6,12 +6,15 @@ Tested for Ubuntu based instances.
 
 ### Usage
 
-This [Ansible](http://www.ansible.com) playbook will create a specified instance:
+This [Ansible](http://www.ansible.com) playbook when run with all tasks
+in a sequence will:
 
-* creates the AWS instance and wait for it to be ready (SSH available)
-* uploads a public SSH key as specified so that user "ubuntu" can log without password
-* executes something in the instance (to be defined)
-* deletes the same instance
+* create one or more AWS instances and wait for them to be ready (SSH available)
+* upload a public SSH key as specified so that user "ubuntu" can log without password
+* send an email with the details of the created instances
+* save in a local file the details of the created instances
+* executes something in the instances (to be defined)
+* delete the same instances sending an email with the details
 
 
 ```
@@ -29,7 +32,33 @@ user@host:~/ansible-aws$ cp group_vars/all.sample group_vars/all
 user@host:~/ansible-aws$ nano group_vars/all
 
 ## run Ansible playbook
-user@host:~/secure-ssh$ ansible-playbook -i hosts bootstrap.yml
+user@host:~/ansible-aws$ ansible-playbook -i hosts bootstrap.yml
+```
+
+A local file named ```/tmp/instances.yaml``` will be created at each
+successful run with a description of the instances (yaml).
+
+You can run the Ansible playbook limiting to certain operations (roles)
+only. Available tags are ```create```, ```delete```, ```config```:
+
+```
+## run Ansible playbook with tags: create only
+user@host:~/ansible-aws$ ansible-playbook -i hosts --tags "create" bootstrap.yml
+```
+
+You can always pass variables as arguments to Ansible.
+So for example if you want to run the ```delete``` role only and you
+need to specify the instance to be deleted you can use the generated
+local file ```/tmp/instances.yaml``` (edited in case you need to operate
+on certain instances only) and the run Ansible with:
+
+```
+## Prepare a description of instances to be deleted
+user@host:~/ansible-aws$ cp /tmp/instances.yaml delete.yaml
+user@host:~/ansible-aws$ nano delete.json
+
+## run Ansible playbook with tags and variables
+user@host:~/ansible-aws$ ansible-playbook -i hosts --tags "delete" --extra-vars "@delete.yaml" bootstrap.yml
 ```
 
 ### Reference
