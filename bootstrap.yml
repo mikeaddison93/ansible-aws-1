@@ -1,0 +1,25 @@
+---
+# Launch instances, runs some tasks
+# and then terminate them
+
+- name: Create a sandbox instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  roles:
+    - create
+
+
+#- name: Configure instance(s)
+#  hosts: launched
+#  sudo: True
+#  gather_facts: True
+#  roles:
+#    - my_awesome_role
+#    - my_awesome_test
+
+- name: Terminate instances
+  hosts: localhost
+  connection: local
+  roles:
+    - delete
