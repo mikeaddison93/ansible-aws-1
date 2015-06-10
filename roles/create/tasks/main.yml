@@ -2,39 +2,49 @@
 # Launch instances
 - name: Launch instance
   ec2:
-      key_name: "{{ keypair }}"
-      group_id: "{{ security_group }}"
-      instance_type: "{{ instance_type }}"
-      spot_price: "{{ spot_price }}"
-      spot_wait_timeout: "{{ spot_wait_timeout }}"
-      image: "{{ image }}"
+      key_name: "{{ item.keypair }}"
+      group_id: "{{ item.security_group }}"
+      instance_type: "{{ item.instance_type }}"
+      spot_price: "{{ item.spot_price }}"
+      spot_wait_timeout: "{{ item.spot_wait_timeout }}"
+      image: "{{ item.image }}"
       wait: true
-      region: "{{ region }}"
-      vpc_subnet_id: "{{ subnet }}"
+      region: "{{ item.region }}"
+      vpc_subnet_id: "{{ item.subnet }}"
+      count: "{{ item.count }}"
       assign_public_ip: yes
       aws_access_key: "{{ access_key }}"
       aws_secret_key: "{{ secret_key }}"
+  with_items: ec2create.instances
   register: ec2
   
+#- name: Display results
+#  debug: msg="Registered {{ ec2 }}"
+
 - name: Save instance info in a local file
-  local_action: copy content="ec2\n {{ ec2.instances|to_nice_yaml }}" dest="/tmp/instances.yaml"
+  local_action: template src="ec2.j2" dest="/tmp/instances.yaml"
 
 - name: Add new instance to host group
-  add_host: hostname={{ item.public_ip }} groupname=launched
-  with_items: ec2.instances
+  add_host: hostname={{ item.1.public_ip }} groupname=launched
+  with_subelements:
+    - ec2.results
+    - instances
 
 - name: Wait for SSH to come up
-  wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
-  with_items: ec2.instances
-
+  wait_for: host={{ item.1.public_dns_name }} port=22 delay=60 timeout=320 state=started
+  with_subelements:
+    - ec2.results
+    - instances
+  
 - name: Send e-mail to admins
   local_action: mail
-      from={{mail_from}}
-      to={{mail_to}}
-      host={{mail_host}}
-      subject="EC2 instance {{item.id}}"
-      body="EC2 instance {{item.id}} created on {{item.public_ip}}"
+      from={{ mail_from }}
+      to={{ mail_to }}
+      host={{ mail_host }}
+      subject="EC2 instance {{ item.1.id }} created"
+      body="EC2 instance {{ item.1.id }} created on {{ item.1.public_ip }}"
   when: mail_to is defined
-  with_items: ec2.instances
-  
-
+  with_subelements:
+    - ec2.results
+    - instances
+ 

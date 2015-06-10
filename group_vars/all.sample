@@ -1,23 +1,10 @@
 ---
-# Key pair available in ~/.ssh that you want
-# the instance to be configured with, for
-# later access with:
-# ssh ubuntu@ip_address
+# Access/Secret keys created from AWS Control Panel
+# (hint: use a new user for this)
+# (hint2: never EVER push this to a repo)
 #
-keypair: name@email
-
-# Needed for spot instance only
-#
-spot_price: 0.02
-spot_wait_timeout: 600
-
-# Needed in all cases
-#
-instance_type: m1.small
-security_group: sg-5cd55a39
-image: ami-5da23a2a
-region: eu-west-1
-subnet: subnet-4b3a6f0d
+access_key: <pls keep very secret>
+secret_key: <pls keep very secret>
 
 # Email sent as notification
 # hint: comment at least mail_to to exclude mail sending
@@ -26,9 +13,45 @@ subnet: subnet-4b3a6f0d
 #mail_from: name2@email
 #mail_host: smtp.email
 
-# Access/Secret keys created from AWS Control Panel
-# (hint: use a new user for this)
-# (hint2: never EVER push this to a repo)
+# List of instances
 #
-access_key: <pls keep very secret>
-secret_key: <pls keep very secret>
+ec2create:
+  instances:
+    - id: 0
+      # Key pair available in ~/.ssh that you want
+      # the instance to be configured with, for
+      # later access with:
+      # ssh ubuntu@ip_address
+      #
+      keypair: name@email
+      # Needed for spot instance only
+      #
+      spot_price: 0.02
+      spot_wait_timeout: 600
+      # Needed in all cases
+      #
+      count: 1
+      instance_type: m1.small
+      security_group: sg-5cd55a39
+      image: ami-5da23a2a
+      region: eu-west-1
+      subnet: subnet-4b3a6f0d
+    - id: 1
+      # Key pair available in ~/.ssh that you want
+      # the instance to be configured with, for
+      # later access with:
+      # ssh ubuntu@ip_address
+      #
+      keypair: name@email
+      # Needed for spot instance only
+      #
+      spot_price: 0.02
+      spot_wait_timeout: 600
+      # Needed in all cases
+      #
+      count: 2
+      instance_type: m1.small
+      security_group: sg-5cd55a39
+      image: ami-5da23a2a
+      region: eu-west-1
+      subnet: subnet-4b3a6f0d

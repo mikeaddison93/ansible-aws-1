@@ -18,20 +18,25 @@ in a sequence will:
 
 
 ```
-## install prerequisites ##
+# install prerequisites
 # in Ubuntu/Debian
+#
 user@host:~$ sudo apt-get install python-pip
 user@host:~$ sudo apt-get install python-passlib
 user@host:~$ sudo pip install ansible
 user@host:~$ sudo pip install --upgrade ansible
 
-## clone this script and configure for your target hosts ##
+# clone this script and configure for your target hosts
+# hint: the configuration file enables to specify
+# multiple instances, with different settings
+#
 user@host:~$ git clone <this repo>
 user@host:~$ cd ansible-aws
 user@host:~/ansible-aws$ cp group_vars/all.sample group_vars/all
 user@host:~/ansible-aws$ nano group_vars/all
 
-## run Ansible playbook
+# run Ansible playbook
+#
 user@host:~/ansible-aws$ ansible-playbook -i hosts bootstrap.yml
 ```
 
@@ -42,7 +47,7 @@ You can run the Ansible playbook limiting to certain operations (roles)
 only. Available tags are ```create```, ```delete```, ```config```:
 
 ```
-## run Ansible playbook with tags: create only
+# run Ansible playbook with tags: create only
 user@host:~/ansible-aws$ ansible-playbook -i hosts --tags "create" bootstrap.yml
 ```
 
@@ -53,11 +58,11 @@ local file ```/tmp/instances.yaml``` (edited in case you need to operate
 on certain instances only) and the run Ansible with:
 
 ```
-## Prepare a description of instances to be deleted
+# Prepare a description of instances to be deleted
 user@host:~/ansible-aws$ cp /tmp/instances.yaml delete.yaml
-user@host:~/ansible-aws$ nano delete.json
+user@host:~/ansible-aws$ nano delete.yaml
 
-## run Ansible playbook with tags and variables
+# run Ansible playbook with tags and variables
 user@host:~/ansible-aws$ ansible-playbook -i hosts --tags "delete" --extra-vars "@delete.yaml" bootstrap.yml
 ```
 
