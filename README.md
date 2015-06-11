@@ -1,6 +1,6 @@
 # Creating AWS Instances with Ansible
 
-*Scripts* for [Ansible](http://www.ansible.com) that creates an AWS instance, executes something inside, deletes the instance.
+[Ansible](http://www.ansible.com) playbook that creates an AWS instance, executes something inside, deletes the instance.
 
 Tested for Ubuntu based instances.
 
