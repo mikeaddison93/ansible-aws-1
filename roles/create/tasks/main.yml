@@ -18,8 +18,8 @@
   with_items: ec2create.instances
   register: ec2
   
-#- name: Display results
-#  debug: msg="Registered {{ ec2 }}"
+- name: Display results
+  debug: msg="Registered {{ ec2 }}"
 
 - name: Save instance info in a local file
   local_action: template src="ec2.j2" dest="/tmp/instances.yaml"
