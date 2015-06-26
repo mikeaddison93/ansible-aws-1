@@ -1,0 +1,29 @@
+---
+# Example operation on instances: measure time needed to install Eclipse CDT
+#
+
+
+# add remote host to local known_hosts file
+- name: Remove fingerprints
+  sudo: no
+  local_action: command ssh-keygen -R {{ inventory_hostname }}
+
+
+# add remote host to local known_hosts file
+- name: Check host name availability
+  sudo: no
+  local_action: command /usr/bin/ssh-keygen -f ~/.ssh/known_hosts -F {{ inventory_hostname }}
+  register: ssh_known_host_results
+
+#- name: Scan the public key
+  sudo: no
+  local_action:
+    shell ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts 2>&1
+
+- name: Install Eclipse CDT
+  sudo: yes
+  apt: name=eclipse-cdt update_cache=yes
+  register: shell_output
+  
+- name: Display results
+  debug: msg="Eclipse installed {{ shell_output.stdout  }}"

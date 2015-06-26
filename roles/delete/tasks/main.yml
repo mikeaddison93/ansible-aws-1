@@ -2,24 +2,18 @@
 # Delete instances
 
 - name: Terminate instances that were previously launched
-  ec2:
-     state: "absent"
-     instance_ids: "{{ item.1.id }}"
-     region: "{{ item.1.region }}"
-     aws_access_key: "{{ access_key }}"
-     aws_secret_key: "{{ secret_key }}"
-  with_subelements:
-    - ec2.results
-    - instances
+  local_action: ec2
+     state="absent"
+     instance_ids="{{ ec2_id }}"
+     region="{{ ec2_region }}"
+     aws_access_key="{{ access_key }}"
+     aws_secret_key="{{ secret_key }}"
 
 - name: Send e-mail to admins
   local_action: mail
       from={{ mail_from }}
       to={{ mail_to }}
       host={{ mail_host }}
-      subject="EC2 instance {{ item.1.id }} deleted"
-      body="EC2 instance {{ item.1.id }} deleted"
+      subject="EC2 instance {{ ec2_id }} deleted"
+      body="EC2 instance {{ ec2_id }} with IP {{ inventory_hostname }} deleted"
   when: mail_to is defined
-  with_subelements:
-    - ec2.results
-    - instances

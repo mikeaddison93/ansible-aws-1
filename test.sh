@@ -6,6 +6,7 @@ function testcommand {
     local status=$?
     if [ $status -ne 0 ]; then
         echo -e "\nThe command was:\n$@\nand it exited with error: $status\n" >&2
+        exit 1
     else
         echo -e "\nThe command was:\n$@\nand it exited without error: $status\n" >&2
     fi
@@ -28,11 +29,15 @@ echo -e "######################" >&2
 echo -e "\n" >&2
 testcommand ansible-playbook -i hosts --tags "create" bootstrap.yml
 
+echo -e "# Third: process alone" >&2
+echo -e "######################" >&2
+echo -e "\n" >&2
+testcommand ansible-playbook -i /tmp/instances.yaml --tags "config" bootstrap.yml
+
 
 echo -e "\n" >&2
-echo -e "# Third: delete alone" >&2
+echo -e "# Fourth: delete alone" >&2
 echo -e "#####################" >&2
 echo -e "\n" >&2
-testcommand cat /tmp/instances.yaml|sed 's/^[ \t]*- instances:/        - instances:/' > delete.yaml
-testcommand ansible-playbook -i hosts --tags "delete" --extra-vars "@delete.yaml" bootstrap.yml
+testcommand ansible-playbook -i /tmp/instances.yaml --tags "delete" bootstrap.yml
 

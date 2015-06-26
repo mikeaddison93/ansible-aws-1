@@ -1,8 +1,6 @@
-ec2:
-  results:
-    {% for item in ec2.results %}
-    - instances:
-      {% for item2 in item.instances %}
-      - {{ item2|to_nice_json }}
-      {% endfor %}
-    {% endfor %}
+[launched]
+{% for item in ec2.results %}
+  {% for item2 in item.instances %}
+   {{ item2.public_ip }} ec2_id={{ item2.id }} ec2_region={{ item2.region }} ansible_ssh_user=ubuntu
+  {% endfor %}
+{% endfor %}

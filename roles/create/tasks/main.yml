@@ -21,14 +21,19 @@
 - name: Display results
   debug: msg="Registered {{ ec2 }}"
 
-- name: Save instance info in a local file
-  local_action: template src="ec2.j2" dest="/tmp/instances.yaml"
-
 - name: Add new instance to host group
-  add_host: hostname={{ item.1.public_ip }} groupname=launched
+  add_host:
+      hostname={{ item.1.public_ip }}
+      groups=launched
+      ec2_id={{ item.1.id }}
+      ec2_region={{ item.1.region }}
+      ansible_ssh_user=ubuntu
   with_subelements:
     - ec2.results
     - instances
+
+- name: Save instance info to a local file
+  local_action: template src="ec2.j2" dest="/tmp/instances.yaml"
 
 - name: Wait for SSH to come up
   wait_for: host={{ item.1.public_dns_name }} port=22 delay=60 timeout=320 state=started
@@ -47,4 +52,3 @@
   with_subelements:
     - ec2.results
     - instances
- 

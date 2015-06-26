@@ -65,14 +65,15 @@ Please note inside the configuration file ```group_vars/all```:
     identical instances to be created
 
 A local file named ```/tmp/instances.yaml``` will be created at each
-successful run with a description of the instances (yaml).
+successful run with a description of the instances (yaml) in a format
+useful as inventory file.
 
 You can run the Ansible playbook limiting to certain operations (roles)
 only. Available tags are ```create```, ```delete```, ```config```:
 
 ```
 # run Ansible playbook with tags: create only
-user@host:~/ansible-aws$ ansible-playbook -i hosts --tags "create" bootstrap.yml
+user@host:~/ansible-aws$ ansible-playbook -i /tmp/instances.yaml --tags "create" bootstrap.yml
 ```
 
 You can always pass variables as arguments to Ansible.
@@ -87,7 +88,7 @@ user@host:~/ansible-aws$ cp /tmp/instances.yaml delete.yaml
 user@host:~/ansible-aws$ nano delete.yaml
 
 # run Ansible playbook with tags and variables
-user@host:~/ansible-aws$ ansible-playbook -i hosts --tags "delete" --extra-vars "@delete.yaml" bootstrap.yml
+user@host:~/ansible-aws$ ansible-playbook -i delete.yaml --tags "delete" bootstrap.yml
 ```
 
 ### Testing

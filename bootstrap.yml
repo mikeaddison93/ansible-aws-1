@@ -12,18 +12,19 @@
     - create
 
 
-#- name: Configure instance(s)
-#  hosts: launched
-#  sudo: True
-#  gather_facts: True
-#  roles:
-#    - my_awesome_role
-#    - my_awesome_test
-#  tags:
-#    - config
+- name: Configure instance(s)
+  hosts: launched
+  sudo: True
+  remote_user: ubuntu
+  gather_facts: False
+  roles:
+    - example
+  tags:
+    - config
 
 - name: Terminate instances
-  hosts: localhost
+  hosts: launched
+  gather_facts: False
   connection: local
   roles:
     - delete
