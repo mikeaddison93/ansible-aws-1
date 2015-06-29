@@ -98,10 +98,6 @@ above, with the current configuration. Errors are reported.
 
 ### Known issues
 
-The generated output file ```/tmp/instances.yaml``` is not perfectly
-interpreted as yaml due to leading spaces on certain lines; needs
-a very simple filtering, pls see content of test bash. Will investigate
-and try to fix this.
 
 ### References
 
