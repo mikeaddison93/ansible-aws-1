@@ -13,6 +13,14 @@ secret_key: <pls keep very secret>
 #mail_from: name2@email
 #mail_host: smtp.email
 
+# Needed for MQTT notifications
+#
+mqtt_server: broker.hostname.com
+mqtt_root: ansible/notify
+mqtt_user: <pls keep very secret>
+mqtt_pwd: <pls keep very secret>
+
+
 # List of instances
 #
 ec2create:

@@ -1,6 +1,17 @@
 ---
 # Delete instances
 
+- name: notify role start
+  local_action: mqtt
+     server={{ mqtt_server }}
+     qos=0
+     retain=false
+     username={{ mqtt_user }}
+     password={{ mqtt_pwd }}
+     topic="{{ mqtt_root }}/{{ local_hostname }}"
+     payload="ansible-aws at {{ timestamp }} delete role start for {{ inventory_hostname }}"
+  when: mqtt_server is defined
+
 - name: Terminate instances that were previously launched
   local_action: ec2
      state="absent"
@@ -17,3 +28,16 @@
       subject="EC2 instance {{ ec2_id }} deleted"
       body="EC2 instance {{ ec2_id }} with IP {{ inventory_hostname }} deleted"
   when: mail_to is defined
+
+- name: notify role end
+  local_action: mqtt
+     server={{ mqtt_server }}
+     qos=0
+     retain=false
+     username={{ mqtt_user }}
+     password={{ mqtt_pwd }}
+     topic="{{ mqtt_root }}/{{ local_hostname }}"
+     payload="ansible-aws at {{ timestamp }} delete role end for {{ inventory_hostname }}"
+  when: mqtt_server is defined
+
+

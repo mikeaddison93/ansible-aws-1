@@ -2,6 +2,17 @@
 # Example operation on instances: measure time needed to install Eclipse CDT
 #
 
+- name: notify role start
+  sudo: no
+  local_action: mqtt
+     server={{ mqtt_server }}
+     qos=0
+     retain=false
+     username={{ mqtt_user }}
+     password={{ mqtt_pwd }}
+     topic="{{ mqtt_root }}/{{ local_hostname }}"
+     payload="ansible-aws at {{ timestamp }} config role start for {{ inventory_hostname }}"
+  when: mqtt_server is defined
 
 # add remote host to local known_hosts file
 - name: Remove fingerprints
@@ -27,3 +38,18 @@
   
 - name: Display results
   debug: msg="Eclipse installed {{ shell_output.stdout  }}"
+  when: shell_output.stdout is defined
+
+- name: notify role end
+  sudo: no
+  local_action: mqtt
+     server={{ mqtt_server }}
+     qos=0
+     retain=false
+     username={{ mqtt_user }}
+     password={{ mqtt_pwd }}
+     topic="{{ mqtt_root }}/{{ local_hostname }}"
+     payload="ansible-aws at {{ timestamp }} config role end for {{ inventory_hostname }}"
+  when: mqtt_server is defined
+
+

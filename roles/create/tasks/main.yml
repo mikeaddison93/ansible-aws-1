@@ -1,5 +1,17 @@
 ---
 # Launch instances
+
+- name: notify role start
+  local_action: mqtt
+     server={{ mqtt_server }}
+     qos=0
+     retain=false
+     username={{ mqtt_user }}
+     password={{ mqtt_pwd }}
+     topic="{{ mqtt_root }}/{{ local_hostname }}"
+     payload="ansible-aws at {{ timestamp }} create role start for {{ inventory_hostname }}"
+  when: mqtt_server is defined
+
 - name: Launch instance
   ec2:
       key_name: "{{ item.keypair }}"
@@ -41,6 +53,17 @@
     - ec2.results
     - instances
   
+- name: notify role end
+  local_action: mqtt
+     server={{ mqtt_server }}
+     qos=0
+     retain=false
+     username={{ mqtt_user }}
+     password={{ mqtt_pwd }}
+     topic="{{ mqtt_root }}/{{ local_hostname }}"
+     payload="ansible-aws at {{ timestamp }} create role end for {{ inventory_hostname }}"
+  when: mqtt_server is defined
+
 - name: Send e-mail to admins
   local_action: mail
       from={{ mail_from }}
